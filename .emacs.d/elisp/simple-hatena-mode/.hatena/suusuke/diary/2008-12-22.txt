@@ -1,0 +1,93 @@
+
+
+*[subversion]subversionでバックアップ
+
+**バックアップの方法
+
++ファイルコピー
++svnadmin dump
++svnadmin hotcopy
++svnsync
+
+どれにするか。。。
+
+
+取り合えず、svnsyncほどきっちりバックアップを取る必要がないと思ったので、svnadmin dump でバックアップを取る事にした。
+
+
+**バックアップのシェル
+
+svnadmin dump でバックアップして、tar で圧縮するシェルを[http://kjirou.sakura.ne.jp/mt/2008/03/svndumptargz.html:title=こちら]を参考に作成。
+
+svnbackup.sh
+
+>||
+#!/bin/sh
+#
+# SVNリポジトリを保存する
+#
+# svnadmin dump で backup し tar で 圧縮
+#
+#
+
+
+#---------------
+# 設定値
+#
+# *ディレクトリを指定する際は、末尾に"/"を付けること
+#---------------
+# svnadminコマンドへのパス
+SVNADMIN_CMD='svnadmin'
+# リポジトリディレクトリへの絶対パス
+REPOS_DIR='/var/www/svn/'
+# バックアップファイル保存先ディレクトリへの絶対パス
+OUTPUT_DIR='/tmp/'
+# バックアップファイル名
+OUTPUT_FILENAME='svn_repos_backup_'`date '+%Y%m%d_%H%M%S'`
+# 作業用一時出力ディレクトリへの絶対パス
+TMP_DIR='/tmp/__svn_repos_backuper__/'
+
+
+#---------------
+# 処理
+#---------------
+echo "... start processing."
+
+# 全リポジトリへ svnadmin load
+mkdir -p $TMP_DIR$OUTPUT_FILENAME
+for i in `ls $REPOS_DIR`
+do
+    echo "... start dumping. $REPOS_DIR$i"
+    `$SVNADMIN_CMD dump $REPOS_DIR$i > $TMP_DIR$OUTPUT_FILENAME/$i'.dump'`
+    echo "... complete dumping. $REPOS_DIR$i"
+done
+
+# ファイルを圧縮
+echo "... start compression."
+keeping_cd=`pwd`
+cd $TMP_DIR
+tar czf $OUTPUT_DIR$OUTPUT_FILENAME.tar.gz ./$OUTPUT_FILENAME
+cd $keeping_cd
+echo "... complete compression."
+
+# 一時ファイルを削除
+rm $TMP_DIR$OUTPUT_FILENAME/*.dump
+
+echo "... complete processing."
+
+||<
+
+**cronに登録
+
+crontab -e コマンドで実行ユーザのcronの設定ファイルができる。
+-u オプションでユーザを指定すればそのユーザのcronの設定ファイルができる。
+
+crontabコマンドで /var/spool/cron/[ユーザ名] のファイルが生成される。
+
+設定内容は毎週土曜の5時に実行するように設定。
+
+>||
+↓毎週土曜日の５時に実行（分 時 日 月 曜日）
+00 05 * * 6 /root/svnbackup.sh
+||<
+

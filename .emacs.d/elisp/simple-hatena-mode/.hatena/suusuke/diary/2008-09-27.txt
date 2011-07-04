@@ -1,0 +1,152 @@
+
+
+*1222478262*[bash][screen]複数端末でコマンド履歴(bash_history)を共有する
+
+
+やっぱり、共有したいよね。
+
+
+**~/.bashrcの設定
+
+>>
+function share_history {  # 以下の内容を関数として定義
+    history -a  # .bash_historyに前回コマンドを1行追記
+    history -c  # 端末ローカルの履歴を一旦消去
+    history -r  # .bash_historyから履歴を読み込み直す
+}
+PROMPT_COMMAND='share_history'  # 上記関数をプロンプト毎に自動実施
+shopt -u histappend   # .bash_history追記モードは不要なのでOFFに
+export HISTSIZE=9999  # 履歴のMAX保存数を指定
+<<
+
+
+これで、screen使ってもコマンド履歴が共有できる。
+
+
+*1222478811*[ruby][rails]macでrailsを動かしてみる
+
+
+TDC(東北デベロッパーズコミュニティ)で開催されている、イケテルRails勉強会 in 仙台ではNetBeansでrailsの開発をしています。
+
+
+でも、せっかくmac買ったし、railsのコマンド使って開発してみたいー。
+
+
+
+**環境構築
+
+
+ruby 1.8.6 (MacPortでインストールしたもの /opt/local/bin/ruby)
+gem 1.1.1 (MacPortでインストールしたもの /opt/local/bin/gem)
+>>
+sudo port install rb-rubygems
+<<
+rails 2.1.1 (gemでインストールしたもの /opt/local/bin/rails)
+>>
+sudo gem install -v=2.1.1 rails <-WEBrick実行時に2.1.1をインストールしろとエラーがでたので。。。
+<<
+
+
+**railsコマンドを使う
+
+
+>>
+rails sampleapp
+<<
+
+
+./sampleappにいろいろ、ディレクトリが作成される。
+
+
+**WEBrickを起動
+
+
+>>
+./sampleapp/script/server
+<<
+
+
+http://localhost:3000で確認してみる。
+
+
+**開発環境
+
+
+[http://d.hatena.ne.jp/yuko1658/20071213/1197517201:title]を参考に構築しました。
+
+
+取り合えず、ruby-mode.elとruby-electric.elを使えるようにしました。
+
+
+適当なWEBアプリ作ってみよー。
+
+
+**明日は
+
+
+[http://tohoku-dev.jp/modules/event/index.php?smode=Daily&action=View&event_id=0000000006&caldate=2008-9-27:title]
+
+
+参加したかったんだけど、急用が出来てしまい今回は断念。。。
+
+
+残念
+
+
+**追記
+
+
+ユーザ登録WEBアプリ作ってみた。作ってみたというか、全て自動生成。
+
+
+***プロジェクト生成
+
+
+>>
+rails sampleapp -d mysql
+<<
+
+
+データベースはmysqlにしたかったのでオプションで指定。
+railsコマンドは[http://d.hatena.ne.jp/taxshi/20080111/1200060963:title]が参考になりました。
+
+
+***モデルの生成
+
+
+scaffoldを利用してモデルを生成する。
+
+
+>>
+cd sampleapp
+./script/generate scaffold user name:string password:string
+<<
+
+
+***テーブル生成
+
+
+rakeコマンドでテーブル生成。
+
+
+>>
+rake db:migrate
+<<
+
+
+ちなみに、デフォルトで[プロジェクト名]_developmentというDBに作成されるみたいなので、mysqlでsampleapp_developmentというDBを作成する。
+
+
+***WEBrick起動
+
+
+>>
+./script/server
+<<
+
+
+***確認
+
+http://localhost:3000/users
+
+

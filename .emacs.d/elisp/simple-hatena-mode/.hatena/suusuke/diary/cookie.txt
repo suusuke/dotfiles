@@ -1,0 +1,3 @@
+#LWP-Cookies-1.0
+Set-Cookie3: b="$1$hh52yXvF$VHvf4HJcc08A40/nFGoTS."; path="/"; domain=.hatena.ne.jp; path_spec; expires="2028-12-16 15:23:50Z"; version=0
+Set-Cookie3: rk=4c85debbe9804232b34c47c4dad7a257d3808de0; path="/"; domain=.hatena.ne.jp; path_spec; expires="2009-01-20 15:23:49Z"; version=0

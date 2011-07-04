@@ -1,0 +1,41 @@
+8
+
+dir
+19742
+http://svn.coderepos.org/share/lang/elisp/simple-hatena-mode/trunk
+http://svn.coderepos.org/share
+
+
+
+2008-03-27T15:08:57.945288Z
+8462
+elim
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+d0d07461-0603-4401-acd4-de1884942a52
+
+simple-hatena-mode.el
+file
+
+
+
+
+2008-09-22T15:34:48.000000Z
+840c5eb8b9ba7fbd45205fa37a298da1
+2008-03-27T15:08:57.945288Z
+8462
+elim
+has-props
+

@@ -7,8 +7,8 @@
 !/.bash_profle
 !/.profile
 !/.emacs
-!/.emacs.d
-!/.vim
+!/.emacs.d/*
+!/.vim/*
 !/.vimrc
 !/.gitconfig
 !/.gitignore
