@@ -6,8 +6,8 @@ nnoremap <C-a> 0
 nnoremap <C-e> :LineEnd<CR>
 nnoremap <C-f> <Right>
 nnoremap <C-b> <Left>
-nnoremap <C-u> 20<Up>
-nnoremap <C-d> 20<Down>
+nnoremap <C-V> 20<Up>
+nnoremap <C-v> 20<Down>
 
 nnoremap U :Redo<CR>
 nnoremap mj :AddJavaDocComment<CR>
@@ -698,8 +698,8 @@ eclipseaction Rename org.eclipse.ui.edit.rename
 "noremap sr :SearchRef<C-m>
 "
 ""<space>j, <space>k‚Å‰æ–Ê‘—‚è
-"noremap <Space>j <C-f>
-"noremap <Space>k <C-b>
+noremap <Space>j <C-f>
+noremap <Space>k <C-b>
 "
 ""ÅŒã‚É•ÒW‚³‚ê‚½ˆÊ’u‚ÉˆÚ“®
 "eclipseaction GoLastEditPosition org.eclipse.ui.edit.text.gotoLastEditPosition
