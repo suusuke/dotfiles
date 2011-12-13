@@ -7,7 +7,7 @@ PS1='[\u@\h \W]\\$ '
 #エイリアス
 alias sudo='sudo '
 alias ll='ls -l'
-alias vim=/opt/local/bin/vim 
+alias vi=/opt/local/bin/vim 
 alias fcd='source /Users/suusuke/unix/bin/fcd.sh'
 alias php4=/usr/local/lib/php-4.4.9/bin/php
 alias pear4=/usr/local/lib/php-4.4.9/bin/pear
@@ -26,9 +26,9 @@ shopt -u histappend # .bash_history追記モードは不要なのでOFFに
 export HISTSIZE=9999 # 履歴のMAX保存数を指定
 
 #MacVimの設定 20110704 VimからMacVimに以降
-export EDITOR=/Applications/MacVim.app/Contents/MacOS/Vim
-alias vi='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim "$@"'
-alias vim='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim "$@"'
+#export EDITOR=/Applications/MacVim.app/Contents/MacOS/Vim
+#alias vi='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim -g "$@"'
+#alias vim='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim -g "$@"'
 
 
 echo bashrc
