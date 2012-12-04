@@ -7,10 +7,12 @@ PS1='[\u@\h \W]\\$ '
 #エイリアス
 alias sudo='sudo '
 alias ll='ls -l'
-alias vi=/opt/local/bin/vim 
+alias vi=/opt/local/bin/vim
 alias fcd='source /Users/suusuke/unix/bin/fcd.sh'
+alias pear=/Library/Php/Pear/bin/pear
 alias php4=/usr/local/lib/php-4.4.9/bin/php
 alias pear4=/usr/local/lib/php-4.4.9/bin/pear
+alias phpbrew=~/phpbrew/phpbrew
 
 #bash_historyの共有
 function share_history { # 以下の内容を関数として定義

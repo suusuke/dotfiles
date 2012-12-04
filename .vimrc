@@ -1,458 +1,275 @@
-"-------------------------------------------------------------------------------
-" 基本設定 Basics
-"-------------------------------------------------------------------------------
-set nocompatible                 " Vimっす。vi互換なしっす。
-let mapleader = ","              " キーマップリーダー
-set scrolloff=5                  " スクロール時の余白確保
-set textwidth=0                  " 一行に長い文章を書いていても自動折り返しをしない
-set nobackup                     " バックアップ取らない
-set autoread                     " 他で書き換えられたら自動で読み直す
-"set noswapfile                   " スワップファイル作らない
-set shortmess+=I                 " 起動時のメッセージを消す
-set hidden                       " 編集中でも他のファイルを開けるようにする
-set backspace=indent,eol,start   " バックスペースでなんでも消せるように
-set formatoptions=lmoq           " テキスト整形オプション，マルチバイト系を追加
-set vb t_vb=                     " ビープをならさない
-set browsedir=buffer             " Exploreの初期ディレクトリ
-set whichwrap=b,s,h,l,<,>,[,]    " カーソルを行頭、行末で止まらないようにする
-set showcmd                      " コマンドをステータス行に表示
-set showmode                     " 現在のモードを表示
-set viminfo='50,<1000,s100,\"50  " viminfoファイルの設定
-set modelines=0                  " モードラインは無効
+" ----------------------
+" Vundle 設定
+" ----------------------
+set nocompatible " be iMproved
+filetype off " required!
 
-set hlsearch                     " 検索結果文字列のハイライトを有効にする
-set backspace=2                  " バックスペースでインデントや改行を削除できるようにする
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
 
-"バックアップ、スワップファイルディレクトリ指定
-set backupdir=~/.vim/backup
-set directory=~/.vim/backup
+" let Vundle manage Vundle
+" required!
+Bundle 'gmarik/vundle'
 
-" OSのクリップボードを使用する
-set clipboard+=unnamed
-" ターミナルでマウスを使用できるようにする
-set mouse=a
-set guioptions+=a
-set ttymouse=xterm2
+" My Bundles here:
+" ======================
+" fugitive.vim → git
+" surround.vim
+" mru.vim → 開いたファイルの履歴管理 :MRUコマンドで使用
+" The-NERD-tree → tree表示
+" The-NERD-Commenter → コメント
+" EasyMotion → カーソルの移動を便利にする <Space><Space> k etc...
+" L9
+" FuzzyFinder
+" AutoClose
+" ZenCoding.vim
+" ======================
+Bundle 'fugitive.vim'
+Bundle 'surround.vim'
+Bundle 'mru.vim'
+Bundle 'The-NERD-tree'
+Bundle 'The-NERD-Commenter'
+Bundle 'EasyMotion'
+Bundle 'L9'
+Bundle 'FuzzyFinder'
+Bundle 'AutoClose'
+Bundle 'Shougo/neocomplcache'
+Bundle 'Shougo/neosnippet'
+Bundle 'Shougo/vimproc'
+Bundle 'ZenCoding.vim'
 
-"ヤンクした文字は、システムのクリップボードに入れる"
-set clipboard=unnamed
-" 挿入モードでCtrl+kを押すとクリップボードの内容を貼り付けられるようにする "
-imap <C-K>  <ESC>"*pa
+filetype plugin indent on " required!
 
-" Ev/Rvでvimrcの編集と反映
-command! Ev edit $MYVIMRC
-command! Rv source $MYVIMRC
 
-"pathogenの設定
-"https://github.com/tpope/vim-pathogen
-call pathogen#runtime_append_all_bundles()
 
-"-------------------------------------------------------------------------------
-" ステータスライン StatusLine
-"-------------------------------------------------------------------------------
-set laststatus=2 " 常にステータスラインを表示
-
-"カーソルが何行目の何列目に置かれているかを表示する
-set ruler
-
-"ステータスラインに文字コードと改行文字を表示する
-if winwidth(0) >= 120
-  set statusline=%<[%n]%m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).':'.&ff.']'}%y\ %F%=[%{GetB()}]\ %l,%c%V%8P
-else
-  set statusline=%<[%n]%m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).':'.&ff.']'}%y\ %f%=[%{GetB()}]\ %l,%c%V%8P
-endif
-
-"入力モード時、ステータスラインのカラーを変更
-augroup InsertHook
-autocmd!
-autocmd InsertEnter * highlight StatusLine guifg=#ccdc90 guibg=#2E4340
-autocmd InsertLeave * highlight StatusLine guifg=#2E4340 guibg=#ccdc90
-augroup END
-
-function! GetB()
-  let c = matchstr(getline('.'), '.', col('.') - 1)
-  let c = iconv(c, &enc, &fenc)
-  return String2Hex(c)
-endfunction
-" help eval-examples
-" The function Nr2Hex() returns the Hex string of a number.
-func! Nr2Hex(nr)
-  let n = a:nr
-  let r = ""
-  while n
-    let r = '0123456789ABCDEF'[n % 16] . r
-    let n = n / 16
-  endwhile
-  return r
-endfunc
-" The function String2Hex() converts each character in a string to a two
-" character Hex string.
-func! String2Hex(str)
-  let out = ''
-  let ix = 0
-  while ix < strlen(a:str)
-    let out = out . Nr2Hex(char2nr(a:str[ix]))
-    let ix = ix + 1
-  endwhile
-  return out
-endfunc
-
-"-------------------------------------------------------------------------------
-" 表示 Apperance
-"-------------------------------------------------------------------------------
-set showmatch         " 括弧の対応をハイライト
-set number            " 行番号表示
-set list              " 不可視文字表示
-set listchars=tab:>.,trail:_,extends:>,precedes:< " 不可視文字の表示形式
-set display=uhex      " 印字不可能文字を16進数で表示
-
-" 全角スペースの表示
-highlight ZenkakuSpace cterm=underline ctermfg=lightblue guibg=darkgray
-match ZenkakuSpace /　/
-
-" カーソル行をハイライト
+" ----------------------
+" SETTING
+" ----------------------
+" カラースキーマ
+colorscheme obsidian2
+" 起動メッセージを消す
+set shortmess+=I
+" 検索結果をハイライト表示
+set hlsearch
+"カーソル行の強調表示
 set cursorline
-" カレントウィンドウにのみ罫線を引く
-augroup cch
-  autocmd! cch
-  autocmd WinLeave * set nocursorline
-  autocmd WinEnter,BufRead * set cursorline
-augroup END
-
-:hi clear CursorLine
-:hi CursorLine gui=underline
-highlight CursorLine ctermbg=black guibg=black
-
-" コマンド実行中は再描画しない
-:set lazyredraw
-" 高速ターミナル接続を行う
-:set ttyfast
-
-"-------------------------------------------------------------------------------
-" インデント Indent
-"-------------------------------------------------------------------------------
-set autoindent   " 自動でインデント
-"set paste        " ペースト時にautoindentを無効に(onにするとautocomplpop.vimが動かない)
-set smartindent  " 新しい行を開始したときに、新しい行のインデントを現在行と同じ量にする。
-set cindent      " Cプログラムファイルの自動インデントを始める
-
-" softtabstopはTabキー押し下げ時の挿入される空白の量，0の場合はtabstopと同じ，BSにも影響する
-set tabstop=2 shiftwidth=2 softtabstop=0
-
-if has("autocmd")
-  "ファイルタイプの検索を有効にする
-  filetype plugin on
-  "そのファイルタイプにあわせたインデントを利用する
-  filetype indent on
-  " これらのftではインデントを無効に
-  "autocmd FileType php filetype indent off
-
-  autocmd FileType html :set indentexpr=
-  autocmd FileType xhtml :set indentexpr=
-endif
-
-"-------------------------------------------------------------------------------
-" 補完・履歴 Complete
-"-------------------------------------------------------------------------------
-
-"-------------------------------------------------------------------------------
-" タグ関連 Tags
-"-------------------------------------------------------------------------------
-
-"-------------------------------------------------------------------------------
-" 検索設定 Search
-"-------------------------------------------------------------------------------
-set wrapscan   " 最後まで検索したら先頭へ戻る
-set ignorecase " 大文字小文字無視
-set smartcase  " 検索文字列に大文字が含まれている場合は区別して検索する
-set incsearch  " インクリメンタルサーチ
-set hlsearch   " 検索文字をハイライト
-"Escの2回押しでハイライト消去
-nmap <ESC><ESC> ;nohlsearch<CR><ESC>
-
-"選択した文字列を検索
-vnoremap <silent> // y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
-"選択した文字列を置換
-vnoremap /r "xy;%s/<C-R>=escape(@x, '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
-
-"s*置換後文字列/g<Cr>でカーソル下のキーワードを置換
-nnoremap <expr> s* ':%substitute/\<' . expand('<cword>') . '\>/'
-
-" Ctrl-iでヘルプ
-nnoremap <C-i>  :<C-u>help<Space>
-" カーソル下のキーワードをヘルプでひく
-nnoremap <C-i><C-i> :<C-u>help<Space><C-r><C-w><Enter>
-
-" :Gb <args> でGrepBufferする
-command! -nargs=1 Gb :GrepBuffer <args>
-" カーソル下の単語をGrepBufferする
-nnoremap <C-g><C-b> :<C-u>GrepBuffer<Space><C-r><C-w><Enter>
-
-"-------------------------------------------------------------------------------
-" 移動設定 Move
-"-------------------------------------------------------------------------------
-
-" カーソルを表示行で移動する。論理行移動は<C-n>,<C-p>
-nnoremap h <Left>
-nnoremap j gj
-nnoremap k gk
-nnoremap l <Right>
-nnoremap <Down> gj
-nnoremap <Up>   gk
-
-" 0, 9で行頭、行末へ
-nmap 1 0
-nmap 0 ^
-nmap 9 $
-
-" insert mode での移動
-imap  <C-e> <END>
-imap  <C-a> <HOME>
-" インサートモードでもhjklで移動（Ctrl押すけどね）
-"imap <C-j> <Down>
-"imap <C-k> <Up>
-"imap <C-h> <Left>
-"imap <C-l> <Right>
-imap <C-n> <Down>
-imap <C-p> <Up>
-imap <C-b> <Left>
-imap <C-f> <Right>
-
-
-"<space>j, <space>kで画面送り
-noremap <Space>j <C-f>
-noremap <Space>k <C-b>
-
-" spaceで次のbufferへ。back-spaceで前のbufferへ
-nmap <Space> ;MBEbn<CR>
-nmap <BS> ;MBEbp<CR>
-
-" F2で前のバッファ
-map <F2> <ESC>;bp<CR>
-" F3で次のバッファ
-map <F3> <ESC>;bn<CR>
-" F4でバッファを削除する
-map <F4> <ESC>;bw<CR>
-
-"フレームサイズを怠惰に変更する
-map <kPlus> <C-W>+
-map <kMinus> <C-W>-
-
-" 前回終了したカーソル行に移動
-autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
-
-" 最後に編集された位置に移動
-nnoremap gb '[
-nnoremap gp ']
-
-" 対応する括弧に移動
-nnoremap [ %
-nnoremap ] %
-
-" 最後に変更されたテキストを選択する
-nnoremap gc  `[v`]
-vnoremap gc ;<C-u>normal gc<Enter>
-onoremap gc ;<C-u>normal gc<Enter>
-
-" カーソル位置の単語をyankする
-nnoremap vy vawy
-
-" 矩形選択で自由に移動する
-set virtualedit+=block
-
-"ビジュアルモード時vで行末まで選択
-vnoremap v $h
-
-" CTRL-hjklでウィンドウ移動
-nnoremap <C-j> ;<C-w>j
-nnoremap <C-k> ;<C-k>j
-nnoremap <C-l> ;<C-l>j
-nnoremap <C-h> ;<C-h>j
-
-"-------------------------------------------------------------------------------
-" エンコーディング関連 Encoding
-"-------------------------------------------------------------------------------
-set ffs=unix,dos,mac  " 改行文字
-set encoding=utf-8    " デフォルトエンコーディング
-
-" 文字コード関連
-" from ずんWiki http://www.kawaz.jp/pukiwiki/?vim#content_1_7
-" 文字コードの自動認識
-if &encoding !=# 'utf-8'
-  set encoding=japan
-  set fileencoding=japan
-endif
-if has('iconv')
-  let s:enc_euc = 'euc-jp'
-  let s:enc_jis = 'iso-2022-jp'
-  " iconvがeucJP-msに対応しているかをチェック
-  if iconv("\x87\x64\x87\x6a", 'cp932', 'eucjp-ms') ==# "\xad\xc5\xad\xcb"
-    let s:enc_euc = 'eucjp-ms'
-    let s:enc_jis = 'iso-2022-jp-3'
-  " iconvがJISX0213に対応しているかをチェック
-  elseif iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
-    let s:enc_euc = 'euc-jisx0213'
-    let s:enc_jis = 'iso-2022-jp-3'
-  endif
-  " fileencodingsを構築
-  if &encoding ==# 'utf-8'
-    let s:fileencodings_default = &fileencodings
-    let &fileencodings = s:enc_jis .','. s:enc_euc .',cp932'
-    let &fileencodings = &fileencodings .','. s:fileencodings_default
-    unlet s:fileencodings_default
-  else
-    let &fileencodings = &fileencodings .','. s:enc_jis
-    set fileencodings+=utf-8,ucs-2le,ucs-2
-    if &encoding =~# '^\(euc-jp\|euc-jisx0213\|eucjp-ms\)$'
-      set fileencodings+=cp932
-      set fileencodings-=euc-jp
-      set fileencodings-=euc-jisx0213
-      set fileencodings-=eucjp-ms
-      let &encoding = s:enc_euc
-      let &fileencoding = s:enc_euc
-    else
-      let &fileencodings = &fileencodings .','. s:enc_euc
-    endif
-  endif
-  " 定数を処分
-  unlet s:enc_euc
-  unlet s:enc_jis
-endif
-" 日本語を含まない場合は fileencoding に encoding を使うようにする
-if has('autocmd')
-  function! AU_ReCheck_FENC()
-    if &fileencoding =~# 'iso-2022-jp' && search("[^\x01-\x7e]", 'n') == 0
-      let &fileencoding=&encoding
-    endif
-  endfunction
-  autocmd BufReadPost * call AU_ReCheck_FENC()
-endif
-" 改行コードの自動認識
-set fileformats=unix,dos,mac
-" □とか○の文字があってもカーソル位置がずれないようにする
-if exists('&ambiwidth')
-  set ambiwidth=double
-endif
-
-" cvsの時は文字コードをeuc-jpに設定
-autocmd FileType cvs :set fileencoding=euc-jp
-" 以下のファイルの時は文字コードをutf-8に設定
-autocmd FileType svn :set fileencoding=utf-8
-autocmd FileType js :set fileencoding=utf-8
-autocmd FileType css :set fileencoding=utf-8
-autocmd FileType html :set fileencoding=utf-8
-autocmd FileType xml :set fileencoding=utf-8
-autocmd FileType java :set fileencoding=utf-8
-autocmd FileType scala :set fileencoding=utf-8
-
-" ワイルドカードで表示するときに優先度を低くする拡張子
-set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
-
-" 指定文字コードで強制的にファイルを開く
-command! Cp932 edit ++enc=cp932
-command! Eucjp edit ++enc=euc-jp
-command! Iso2022jp edit ++enc=iso-2022-jp
-command! Utf8 edit ++enc=utf-8
-command! Jis Iso2022jp
-command! Sjis Cp932
-
-"-------------------------------------------------------------------------------
-" カラー関連 Colors
-"-------------------------------------------------------------------------------
-
-" ターミナルタイプによるカラー設定
-if &term =~ "xterm-debian" || &term =~ "xterm-xfree86" || &term =~ "xterm-256color"
- set t_Co=16
- set t_Sf=^[[3%dm
- set t_Sb=^[[4%dm
-elseif &term =~ "xterm-color"
- set t_Co=8
- set t_Sf=^[[3%dm
- set t_Sb=^[[4%dm
-endif
-
-"ポップアップメニューのカラーを設定
-"hi Pmenu guibg=#666666
-"hi PmenuSel guibg=#8cd0d3 guifg=#666666
-"hi PmenuSbar guibg=#333333
-
-" ハイライト on
-syntax enable
-
-" 補完候補の色づけ for vim7
-hi Pmenu ctermbg=white ctermfg=darkgray
-hi PmenuSel ctermbg=blue ctermfg=white
-hi PmenuSbar ctermbg=0 ctermfg=9
-
-"-------------------------------------------------------------------------------
-" 編集関連 Edit
-"-------------------------------------------------------------------------------
-" yeでそのカーソル位置にある単語をレジスタに追加
-nmap ye ;let @"=expand("<cword>")<CR>
-" Visualモードでのpで選択範囲をレジスタの内容に置き換える
-vnoremap p <Esc>;let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
-
-" Tabキーを空白に変換
+" IMを無効化
+set imdisable
+" 大文字/小文字を区別しない
+set ignorecase
+" 検索時に大文字を含んでいたら大文字/小文字を区別
+set smartcase
+" 新しい行のインデントを現在行と同じにする
+set autoindent
+" タブ幅
+set softtabstop=2
+" タブの代わりに空白文字を挿入する
 set expandtab
+" タブを表示するときの幅
+set tabstop=2
+" タブを挿入するときの幅
+set shiftwidth=2
+" タブの視覚化
+highlight TagKey guibg=#b5d68f
+match TagKey /	/
+" タブ文字、行末など不可視文字を表示する
+set list
+" set listchars=tab:>-,extends:<,trail:-,eol:<
+set listchars=tab:▸\ ,trail:･,eol:↲,extends:❯,precedes:❮
+" ルーラー（右下に表示される行・列の番号）を表示する
+set ruler
+" 行番号を表示する
+set number
+" 閉じ括弧が入力されたとき、対応する括弧を表示する
+set showmatch
+" カーソルを行頭、行末で止まらないようにする
+set whichwrap=b,s,h,l,<,>,[,]
+" helpを日本語有線に
+set helplang=ja
 
-" コンマの後に自動的にスペースを挿入
-inoremap , ,<Space>
-" XMLの閉タグを自動挿入
-augroup MyXML
-  autocmd!
-  autocmd Filetype xml inoremap <buffer> </ </<C-x><C-o>
-augroup END
+" ==========================
+" Status Line
+" ==========================
+set showcmd "ステータスラインにコマンドを表示
+set laststatus=2 "ステータスラインを常に表示
+set statusline=[%L]\ %t\ %y%{'['.(&fenc!=''?&fenc:&enc).':'.&ff.']'}%r%m%=%c:%l/%L "ステータスラインの表示内容
 
-"  Insert mode中で単語単位/行単位の削除をアンドゥ可能にする
-inoremap <C-u>  <C-g>u<C-u>
-inoremap <C-w>  <C-g>u<C-w>
 
-" :Ptでインデントモード切替
-command! Pt :set paste!
+" ----------------------
+" Key Bind
+" ----------------------
+" ======================
+" Mapping <jump-tag>
+" -------------------------------------------------------------------------------
+" コマンド       ノーマルモード 挿入モード コマンドラインモード ビジュアルモード
+" map/noremap           @            -              -                  @
+" nmap/nnoremap         @            -              -                  -
+" imap/inoremap         -            @              -                  -
+" cmap/cnoremap         -            -              @                  - 
+" vmap/vnoremap         -            -              -                  @
+" map!/noremap!         -            @              @                  -
+" -------------------------------------------------------------------------------
+noremap <C-c><C-c> <C-c>
+noremap <C-c><C-e>e :edit $HOME/.vimrc<CR>
+noremap <C-c><C-e>s :source $HOME/.vimrc<CR>
 
-" y9で行末までヤンク
-nmap y9 y$
-" y0で行頭までヤンク
-nmap y0 y^
+nnoremap <C-a> 0
+nnoremap <C-e> $<CR>
+nnoremap <C-f> <Right>
+nnoremap <C-b> <Left>
+nnoremap <C-p> <Up>
+nnoremap <C-n> <Down>
+nnoremap <C-u> 20<Up>
+nnoremap <C-d> 20<Down>
 
-" 保存時に行末の空白を除去する
-autocmd BufWritePre * :%s/\s\+$//ge
-" 保存時にtabをスペースに変換する
-autocmd BufWritePre * :%s/\t/  /ge
+nnoremap U :redo<CR>
 
-" 日時の自動入力
-inoremap <expr> ,df strftime('%Y/%m/%d %H:%M:%S')
-inoremap <expr> ,dd strftime('%Y/%m/%d')
-inoremap <expr> ,dt strftime('%H:%M:%S')
+inoremap <C-o> <Esc>o
+inoremap <C-h> <BS>
+inoremap <C-a> <Esc>0i
+inoremap <C-e> <Esc>$<CR>i
+inoremap <C-p> <Esc><Up>a
+inoremap <C-n> <Esc><Down>a
 
-"-------------------------------------------------------------------------------
-" screenでvim使うための設定
-"-------------------------------------------------------------------------------
-" if &term =~ "screen"
-if &term !~ "xterm-color"
-  autocmd BufEnter * if bufname("") !~ "^?[A-Za-z0-9?]*://" | silent! exe '!echo -n "^[k[`basename %`]^[??"' | endif
-  autocmd VimLeave * silent! exe '!echo -n "^[k`dirs`^[??"'
+inoremap <C-f> <Esc><Right>a
+inoremap <C-b> <Esc>i
+
+inoremap <C-d> <Esc><Right>xi
+
+
+inoremap <C-u> <C-g>u<C-u>
+
+"inoremap <C-j> <Esc>
+inoremap jj <Esc>
+
+" no use
+" nnoremap p :Paste<CR>
+" noremap <C-u> <C-g>u<C-u>
+" noremap <C-w> <C-g>u<C-w>
+" inoremap <C-w> <ESC>:DeletePreviousWord<CR>xi
+
+
+
+" ----------------------
+" plugin setting
+" ----------------------
+
+" ======================
+" NERDTree
+" ======================
+"隠しファイルを表示する
+let NERDTreeShowHidden=1
+" NERDTreeを表示
+nnoremap <leader>n :NERDTree<CR>
+
+" ======================
+" easymotion
+" ======================
+" ホームポジションに近いキーを使う
+let g:EasyMotion_keys='hjklasdfgyuiopqwertnmzxcvbHJKLASDFGYUIOPQWERTNMZXCVB'
+" マッピング
+let g:EasyMotion_leader_key='<Space><Space>'
+" 1 ストローク選択を優先する
+let g:EasyMotion_grouping=1
+" カラー設定変更
+hi EasyMotionTarget ctermbg=none ctermfg=red
+hi EasyMotionShade  ctermbg=none ctermfg=blue
+
+" ======================
+" FuzzyFinder
+" ======================
+let g:fuf_modesDisable=['mrucmd']
+let g:fuf_file_exclude='\v\~$|\.(o|exe|bak|swp|gif|jpg|png)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])'
+let g:fuf_mrufile_exclude='\v\~$|\.bak$|\.swp|\.howm$|\.(gif|jpg|png)$'
+let g:fuf_mrufile_maxItem=10000
+let g:fuf_enumeratingLimit=20
+let g:fuf_keyPreview='<C-]>'
+let g:fuf_previewHeight=0
+let g:fuf_keyOpen='<Tab>'
+let g:fuf_keyOpenTabpage='<CR>'
+
+nmap bg :FufBuffer<CR>
+nmap bG :FufFile <C-r>=expand('%:~:.')[:-1-len(expand('%:~:.:t'))]<CR><CR>
+"nmap gb :FufFile **/<CR>
+nmap br :FufMruFile<CR>
+nmap bq :FufQuickfix<CR>
+nmap bl :FufLine<CR>
+nnoremap <silent> <C-]> :FufTag! <C-r>=expand('<cword>')<CR><CR>
+
+
+" ==========================
+" neocomplecache
+" ==========================
+" AutoComplPopを無効化
+let g:acp_enableAtStartup = 0
+" neocomplcacheを起動時に有効化
+let g:neocomplcache_enable_at_startup = 1
+" 大文字小文字を区別しない
+" let g:neocomplcache_enable_smart_case = 1
+" camel caseを有効化。大文字を区切りとしたワイルドカードみたいなもの
+" let g:neocomplcache_enable_camel_case_completion= 1
+" _の補完を有効にする
+let g:neocomplcache_enable_underbar_completion= 1
+" シンタックスをキャッシュするときの最小文字長
+let g:neocomplcache_min_syntax_length = 3
+"neocomplcacheを自動的にロックするバッファ名のパターン
+let g:neocomplcache_lock_buffer_name_pattern= '\*ku\*'
+
+" Define keyword.
+if !exists('g:neocomplcache_keyword_patterns')
+    let g:neocomplcache_keyword_patterns = {}
 endif
+let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+" スニペットファイルの配置場所
+" let g:NeoComplCache_SnippetsDir = '~/.vim/snippets'
+
+" 1番目の候補を自動選択
+let g:neocomplcache_enable_auto_select = 1
+" zencoding連携
+let g:use_zen_complete_tag = 1
+
+" ==============
+" neocomplcache
+" Plugin key-mappings
+" ==============
+imap <C-k>     <Plug>(neocomplcache_snippets_expand)
+smap <C-k>     <Plug>(neocomplcache_snippets_expand)
+inoremap <expr><C-g>     neocomplcache#undo_completion()
+inoremap <expr><C-l>     neocomplcache#complete_common_string()
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" <CR>: popupを削除
+inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
+
+"ファイル名補完
+inoremap <expr><C-x><C-f> neocomplcache#manual_filename_complete()
+
+" C-jでオムニ補完
+"inoremap <expr> <C-j> &filetype == 'vim' ? "\<C-x>\<C-v>\<C-p>" : "\<C-x>\<C-o>\<C-p>"
+" C-kを押すと行末まで削除
+"inoremap <C-k> <C-o>D
+" C-nでneocomplcache補完
+"inoremap <expr><C-n>  pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>
+" C-pでkeyword補完
+"inoremap <expr><C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
+" 補完候補が表示されている場合は確定。そうでない場合は改行
+inoremap <expr><CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
+" 補完をキャンセル
+"inoremap <expr><C-e>  neocomplcache#close_popup()
 
 
-
-"-------------------------------------------------------------------------------
-" プラグインごとの設定 Plugins
-"-------------------------------------------------------------------------------
-
-
-"-------------------------------------------------------------------------------
-" hatena.vimの設定
-"-------------------------------------------------------------------------------
-set runtimepath+=~/.vim/hatena
-runtime plugin/hatena.vim
-let g:hatena_user='suusuke'
-
-"------------------------------------
-" NERD_commenter.vim
-"------------------------------------
-
-
-"------------------------------------
-" neocomplecache.vim
-"------------------------------------
+" =============
+" neocomplcache
+" command
+" =============
+"Nesでスニペットを編集
+command! -nargs=* Nes NeoComplCacheEditSnippets
